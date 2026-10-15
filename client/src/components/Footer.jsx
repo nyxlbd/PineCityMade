@@ -49,7 +49,7 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-stone-800 py-4 text-center text-sm text-stone-400">
-        © 2026 Pine City Made. Made Local. Made in Pine City.
+        © 2025 Pine City Made. Made Local. Made in Pine City.
       </div>
     </footer>
   );
