@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 import path from 'path';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -12,6 +13,8 @@ import { apiLimiter } from './middleware/rateLimit.js';
 dotenv.config();
 
 const app = express();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const clientDistPath = path.resolve(__dirname, '../client/dist');
 const port = process.env.PORT || 5000;
 const allowedOrigins = (process.env.CLIENT_URLS || process.env.CLIENT_URL || 'http://localhost:5173')
   .split(',')
@@ -43,14 +46,21 @@ app.use('/uploads', express.static(path.resolve(process.cwd(), 'uploads')));
 app.use(morgan('dev'));
 app.use('/api', apiLimiter);
 
-app.get('/', (_req, res) => {
-  res.status(200).json({
-    success: true,
-    message: 'Pine City Made API is running.',
+app.use('/api', apiRoutes);
+
+// Serve the built frontend files.
+app.use(express.static(clientDistPath));
+
+// Send the frontend for website routes, including client-side routes.
+app.get(/.*/, (req, res, next) => {
+  if (req.path.startsWith('/api/') || req.path === '/api') {
+    return next();
+  }
+
+  res.sendFile(path.join(clientDistPath, 'index.html'), (err) => {
+    if (err) next(err);
   });
 });
-
-app.use('/api', apiRoutes);
 
 app.use((req, res) => {
   return errorResponse(res, `Route not found: ${req.originalUrl}`, [], 404);
