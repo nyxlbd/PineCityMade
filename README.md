@@ -2,6 +2,8 @@
 
 Pine City Made is a full-stack e-commerce marketplace focused on Baguio-based local businesses, artisans, and makers. The project is structured as a modular React + Vite frontend and Express + MongoDB backend.
 
+Please note that this is only a minimum viable product for an academic project and under revisions.
+
 ## Features
 
 - Buyer, seller, and admin user roles
